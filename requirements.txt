@@ -17,3 +17,4 @@ regex
 scipy
 gitpython
 PyGitHub
+matplotlib
