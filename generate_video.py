@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-from diffusers import StableVideoDiffusionPipeline
 from typing import List, Optional, Union
 import argparse
 import os
@@ -15,6 +14,13 @@ class LatentVideoDiffusionPipeline:
         self.device = device if torch.cuda.is_available() else "cpu"
         self.dtype = torch.float16 if self.device == "cuda" else torch.float32
         print(f"🎬 Initializing LVD Pipeline on {self.device}")
+
+        try:
+            from diffusers import StableVideoDiffusionPipeline as _StableVideoDiffusionPipeline
+            self._svd_pipeline_cls = _StableVideoDiffusionPipeline
+        except ModuleNotFoundError:
+            self._svd_pipeline_cls = None
+            print("Warning: 'diffusers' is not installed. Running in simulation mode.")
         
         # In a real environment:
         # self.pipe = StableVideoDiffusionPipeline.from_pretrained(model_id, torch_dtype=self.dtype).to(self.device)
